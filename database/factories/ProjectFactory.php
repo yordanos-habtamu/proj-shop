@@ -32,11 +32,7 @@ class ProjectFactory extends Factory
             'price_cents' => fake()->randomElement([0, 999, 1999, 2999, 4900, 9900]),
             'currency' => 'USD',
             'completeness' => fake()->randomElement(ProjectCompleteness::cases())->value,
-            'status' => fake()->randomElement([
-                ProjectStatus::Draft,
-                ProjectStatus::PendingReview,
-                ProjectStatus::Approved,
-            ])->value,
+            'status' => ProjectStatus::Draft->value,
             'cover_image_path' => null,
             'zip_path' => 'zips/'.fake()->uuid().'.zip',
             'tech_stack' => fake()->randomElements(
