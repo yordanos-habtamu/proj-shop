@@ -27,3 +27,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Project rule: generated .md docs are never committed
+/plan.md
