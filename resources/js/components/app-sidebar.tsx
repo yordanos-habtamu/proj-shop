@@ -5,6 +5,7 @@ import {
     LayoutGrid,
     Package,
     ShieldCheck,
+    Store,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
@@ -20,7 +21,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { mine, review } from '@/routes/projects';
+import { index as browse, mine, review } from '@/routes/projects';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -28,6 +29,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Marketplace',
+        href: browse(),
+        icon: Store,
     },
 ];
 

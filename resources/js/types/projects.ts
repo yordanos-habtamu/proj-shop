@@ -47,11 +47,12 @@ export type ProjectListing = {
     completeness: ProjectCompleteness;
     status: ProjectStatus;
     cover_image_path: string | null;
+    cover_url?: string | null;
     tech_stack: string[] | null;
+    seller?: SellerSummary;
     review_notes: string | null;
     reviewed_at: string | null;
     scan_report?: ScanReport | null;
-    seller?: SellerSummary;
     orders_count?: number;
     created_at: string;
     updated_at: string;

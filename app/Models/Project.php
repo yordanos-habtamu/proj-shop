@@ -101,6 +101,39 @@ class Project extends Model
         return $this->status === ProjectStatus::Approved;
     }
 
+    /**
+     * Public-facing array shape for the storefront, including the private cover URL.
+     *
+     * @return array<string, mixed>
+     */
+    public function presentForMarketplace(): array
+    {
+        return [
+            ...$this->only([
+                'id',
+                'seller_id',
+                'title',
+                'slug',
+                'tagline',
+                'description',
+                'price_cents',
+                'currency',
+                'completeness',
+                'status',
+                'cover_image_path',
+                'tech_stack',
+                'review_notes',
+                'reviewed_at',
+                'created_at',
+                'updated_at',
+                'orders_count',
+            ]),
+            'cover_url' => $this->cover_image_path !== null
+                ? route('projects.cover', $this)
+                : null,
+        ];
+    }
+
     public function isPendingReview(): bool
     {
         return $this->status === ProjectStatus::PendingReview;
