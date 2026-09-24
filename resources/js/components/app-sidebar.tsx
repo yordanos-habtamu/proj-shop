@@ -1,5 +1,11 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid, Package } from 'lucide-react';
+import {
+    BookOpen,
+    FolderGit2,
+    LayoutGrid,
+    Package,
+    ShieldCheck,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -14,7 +20,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { mine } from '@/routes/projects';
+import { mine, review } from '@/routes/projects';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -30,6 +36,14 @@ const sellerNavItems: NavItem[] = [
         title: 'My Projects',
         href: mine(),
         icon: Package,
+    },
+];
+
+const reviewerNavItems: NavItem[] = [
+    {
+        title: 'Review queue',
+        href: review(),
+        icon: ShieldCheck,
     },
 ];
 
@@ -55,6 +69,10 @@ export function AppSidebar() {
         props.auth.user.role ?? '',
     );
 
+    const canReview = ['reviewer', 'admin'].includes(
+        props.auth.user.role ?? '',
+    );
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -71,11 +89,11 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain
-                    items={
-                        canSell
-                            ? [...mainNavItems, ...sellerNavItems]
-                            : mainNavItems
-                    }
+                    items={[
+                        ...mainNavItems,
+                        ...(canSell ? sellerNavItems : []),
+                        ...(canReview ? reviewerNavItems : []),
+                    ]}
                 />
             </SidebarContent>
 

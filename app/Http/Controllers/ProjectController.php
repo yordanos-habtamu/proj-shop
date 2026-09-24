@@ -6,6 +6,7 @@ use App\Enums\ProjectCompleteness;
 use App\Enums\ProjectStatus;
 use App\Http\Requests\Projects\StoreProjectRequest;
 use App\Http\Requests\Projects\UpdateProjectRequest;
+use App\Jobs\ScanProjectArchive;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -68,6 +69,10 @@ class ProjectController extends Controller
             'cover_image_path' => $this->storeCover($request->file('cover_image'), $project),
         ])->save();
 
+        if ($project->isPendingReview()) {
+            ScanProjectArchive::dispatch($project);
+        }
+
         Inertia::flash('toast', [
             'type' => 'success',
             'message' => $project->isPendingReview()
@@ -114,6 +119,10 @@ class ProjectController extends Controller
 
         $project->fill($data)->save();
 
+        if ($request->hasFile('zip') && $project->isPendingReview()) {
+            ScanProjectArchive::dispatch($project);
+        }
+
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Project updated.')]);
 
         return to_route('projects.edit', $project);
@@ -147,6 +156,8 @@ class ProjectController extends Controller
             'status' => ProjectStatus::PendingReview,
             'review_notes' => null,
         ]);
+
+        ScanProjectArchive::dispatch($project);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Project submitted for review.')]);
 

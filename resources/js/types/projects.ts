@@ -12,6 +12,29 @@ export type EnumOption = {
     label: string;
 };
 
+export type ScanSeverity = 'low' | 'medium' | 'high';
+
+export type ScanIssue = {
+    severity: ScanSeverity;
+    rule: string;
+    path: string | null;
+    message: string;
+};
+
+export type ScanReport = {
+    verdict: 'clean' | 'flagged';
+    files: number;
+    issues: ScanIssue[];
+    issues_truncated: boolean;
+    scanned_at: string;
+};
+
+export type SellerSummary = {
+    id: number;
+    name: string;
+    email: string;
+};
+
 export type ProjectListing = {
     id: number;
     seller_id: number;
@@ -27,6 +50,8 @@ export type ProjectListing = {
     tech_stack: string[] | null;
     review_notes: string | null;
     reviewed_at: string | null;
+    scan_report?: ScanReport | null;
+    seller?: SellerSummary;
     orders_count?: number;
     created_at: string;
     updated_at: string;

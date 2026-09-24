@@ -113,6 +113,14 @@ class ProjectPolicy
         return $user->isReviewer();
     }
 
+    /**
+     * Determine whether the user can access the review queue.
+     */
+    public function viewQueue(User $user): bool
+    {
+        return $user->isReviewer();
+    }
+
     public function owns(User $user, Project $project): bool
     {
         return $project->seller_id === $user->id;
