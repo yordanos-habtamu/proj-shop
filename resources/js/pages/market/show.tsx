@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     ArrowLeft,
     PackageOpen,
@@ -9,7 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { login } from '@/routes';
-import { index as browse } from '@/routes/projects';
+import { store as checkoutStore } from '@/routes/checkout';
+import { index as browse, mine } from '@/routes/projects';
 import {
     completenessLabels,
     formatPrice,
@@ -128,7 +129,7 @@ export default function ProjectShow({
                                         size="sm"
                                         asChild
                                     >
-                                        <Link href={browse()}>
+                                        <Link href={mine()}>
                                             Manage listing
                                         </Link>
                                     </Button>
@@ -137,8 +138,8 @@ export default function ProjectShow({
                                 <div className="bg-muted rounded-md p-3 text-sm">
                                     <p className="font-medium">Purchased</p>
                                     <p className="text-muted-foreground mt-1">
-                                        Your download link is sent after
-                                        checkout is complete.
+                                        Your copy is waiting on your receipt
+                                        page.
                                     </p>
                                 </div>
                             ) : !auth.user ? (
@@ -157,13 +158,21 @@ export default function ProjectShow({
                                     <Button
                                         className="w-full"
                                         disabled={!can_buy}
+                                        onClick={() =>
+                                            can_buy &&
+                                            router.post(
+                                                checkoutStore.url({
+                                                    project: project.id,
+                                                }),
+                                            )
+                                        }
                                     >
                                         <ShoppingCart />
                                         Buy now
                                     </Button>
                                     <p className="text-muted-foreground text-xs">
                                         {can_buy
-                                            ? 'Stripe checkout arrives with the payments milestone.'
+                                            ? 'You will complete payment with Stripe Checkout.'
                                             : 'Checkout is not available for this project.'}
                                     </p>
                                 </>

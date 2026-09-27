@@ -8,10 +8,10 @@ use App\Models\User;
 class OrderPolicy
 {
     /**
-     * Determine whether the user can download the project for the given order.
+     * Determine whether the user can view the receipt for the given order.
      */
-    public function viewDownload(User $user, Order $order): bool
+    public function view(User $user, Order $order): bool
     {
-        return $order->buyer_id === $user->id && $order->isPaid();
+        return $order->buyer_id === $user->id;
     }
 }

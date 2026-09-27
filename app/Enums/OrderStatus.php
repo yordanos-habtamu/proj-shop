@@ -7,6 +7,8 @@ enum OrderStatus: string
     case Pending = 'pending';
     case Paid = 'paid';
     case Refunded = 'refunded';
+    case Expired = 'expired';
+    case Failed = 'failed';
 
     public function label(): string
     {
@@ -14,6 +16,8 @@ enum OrderStatus: string
             self::Pending => 'Pending',
             self::Paid => 'Paid',
             self::Refunded => 'Refunded',
+            self::Expired => 'Expired',
+            self::Failed => 'Failed',
         };
     }
 }

@@ -4,8 +4,10 @@ import {
     FolderGit2,
     LayoutGrid,
     Package,
+    Percent,
     ShieldCheck,
     Store,
+    Wallet,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
@@ -21,6 +23,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as feesIndex } from '@/routes/admin/fees';
+import { show as connectShow } from '@/routes/connect';
 import { index as browse, mine, review } from '@/routes/projects';
 import type { NavItem } from '@/types';
 
@@ -43,6 +47,11 @@ const sellerNavItems: NavItem[] = [
         href: mine(),
         icon: Package,
     },
+    {
+        title: 'Connect Stripe',
+        href: connectShow(),
+        icon: Wallet,
+    },
 ];
 
 const reviewerNavItems: NavItem[] = [
@@ -50,6 +59,14 @@ const reviewerNavItems: NavItem[] = [
         title: 'Review queue',
         href: review(),
         icon: ShieldCheck,
+    },
+];
+
+const adminNavItems: NavItem[] = [
+    {
+        title: 'Platform fees',
+        href: feesIndex(),
+        icon: Percent,
     },
 ];
 
@@ -79,6 +96,8 @@ export function AppSidebar() {
         props.auth.user.role ?? '',
     );
 
+    const isAdmin = props.auth.user.role === 'admin';
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -99,6 +118,7 @@ export function AppSidebar() {
                         ...mainNavItems,
                         ...(canSell ? sellerNavItems : []),
                         ...(canReview ? reviewerNavItems : []),
+                        ...(isAdmin ? adminNavItems : []),
                     ]}
                 />
             </SidebarContent>

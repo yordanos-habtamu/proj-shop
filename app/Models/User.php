@@ -21,6 +21,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string $name
  * @property string $email
  * @property UserRole $role
+ * @property string|null $stripe_connect_id
+ * @property string|null $stripe_connect_status
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $two_factor_secret
@@ -30,7 +32,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'role', 'password'])]
+#[Fillable(['name', 'email', 'role', 'password', 'stripe_connect_id', 'stripe_connect_status'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements PasskeyUser
 {
@@ -48,9 +50,7 @@ class User extends Authenticatable implements PasskeyUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
-            /* @chisel-2fa */
             'two_factor_confirmed_at' => 'datetime',
-            /* @end-chisel-2fa */
         ];
     }
 
@@ -91,5 +91,15 @@ class User extends Authenticatable implements PasskeyUser
     public function isSeller(): bool
     {
         return in_array($this->role, [UserRole::Seller, UserRole::Reviewer, UserRole::Admin], true);
+    }
+
+    public function hasStripeConnect(): bool
+    {
+        return $this->stripe_connect_id !== null;
+    }
+
+    public function isStripeConnected(): bool
+    {
+        return $this->hasStripeConnect() && $this->stripe_connect_status === 'active';
     }
 }
