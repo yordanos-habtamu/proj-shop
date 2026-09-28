@@ -15,7 +15,14 @@ export type OrderReceipt = {
     payout_cents: number;
     currency: string;
     provider: string | null;
+    can_download?: boolean;
     paid_at: string | null;
+    created_at: string;
+};
+
+export type DownloadAudit = {
+    id: number;
+    downloaded_at: string | null;
     created_at: string;
 };
 

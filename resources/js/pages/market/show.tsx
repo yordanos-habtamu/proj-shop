@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { login } from '@/routes';
 import { store as checkoutStore } from '@/routes/checkout';
+import { show as showOrder } from '@/routes/orders';
 import { index as browse, mine } from '@/routes/projects';
 import {
     completenessLabels,
@@ -21,6 +22,7 @@ type ShowProps = {
     project: ProjectListing;
     is_owner: boolean;
     is_bought: boolean;
+    order_id?: number | null;
     can_buy: boolean;
 };
 
@@ -28,6 +30,7 @@ export default function ProjectShow({
     project,
     is_owner,
     is_bought,
+    order_id,
     can_buy,
 }: ShowProps) {
     const { auth } = usePage<{
@@ -141,6 +144,18 @@ export default function ProjectShow({
                                         Your copy is waiting on your receipt
                                         page.
                                     </p>
+                                    {order_id && (
+                                        <Button
+                                            className="mt-3 w-full"
+                                            variant="outline"
+                                            size="sm"
+                                            asChild
+                                        >
+                                            <Link href={showOrder.url(order_id)}>
+                                                Open receipt
+                                            </Link>
+                                        </Button>
+                                    )}
                                 </div>
                             ) : !auth.user ? (
                                 <>

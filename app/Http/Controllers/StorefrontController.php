@@ -87,15 +87,19 @@ class StorefrontController extends Controller
         $user = $request->user();
 
         $isOwner = $user !== null && $project->seller_id === $user->id;
-        $isBought = $user !== null && $project->orders()
-            ->where('buyer_id', $user->id)
-            ->where('status', OrderStatus::Paid->value)
-            ->exists();
+        $purchasedOrder = $user !== null
+            ? $project->orders()
+                ->where('buyer_id', $user->id)
+                ->where('status', OrderStatus::Paid->value)
+                ->latest('id')
+                ->first()
+            : null;
 
         return Inertia::render('market/show', [
             'project' => $this->projectListing($project),
             'is_owner' => $isOwner,
-            'is_bought' => $isBought,
+            'is_bought' => $purchasedOrder !== null,
+            'order_id' => $purchasedOrder?->id,
             'can_buy' => $user !== null && $user->can('purchase', $project),
         ]);
     }

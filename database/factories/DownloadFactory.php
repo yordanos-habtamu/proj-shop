@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Download;
 use App\Models\Order;
-use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -22,9 +21,19 @@ class DownloadFactory extends Factory
     {
         return [
             'order_id' => Order::factory()->paid(),
-            'project_id' => Project::factory()->approved(),
             'token' => Str::uuid()->toString().Str::random(32),
             'downloaded_at' => null,
         ];
+    }
+
+    /**
+     * The project is always the one that was bought, so a download row can
+     * never point at a project its order did not cover.
+     */
+    public function configure(): static
+    {
+        return $this->afterMaking(function (Download $download): void {
+            $download->project_id = $download->order->project_id;
+        });
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\FeeController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ConnectController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProjectController;
@@ -42,11 +43,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('demo/checkout/{order}/pay', [CheckoutController::class, 'demoPay'])->name('checkout.demo-pay');
 
     Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('orders/{order}/download', [DownloadController::class, 'issue'])->name('downloads.issue');
 
     Route::get('connect', [ConnectController::class, 'show'])->name('connect.show');
     Route::post('connect/start', [ConnectController::class, 'start'])->name('connect.start');
     Route::get('connect/callback', [ConnectController::class, 'callback'])->name('connect.callback');
 });
+
+Route::get('downloads/{order}/{token}', [DownloadController::class, 'serve'])
+    ->name('downloads.serve')
+    ->middleware(['signed', 'throttle:30,1']);
 
 Route::prefix('projects')->name('projects.')->group(function () {
     Route::get('', [StorefrontController::class, 'index'])->name('index');

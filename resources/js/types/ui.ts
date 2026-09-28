@@ -13,6 +13,11 @@ export type FlashToast = {
     message: string;
 };
 
+export type FlashDownload = {
+    url: string;
+    expires_at: string;
+};
+
 export type AuthLayoutProps = {
     children?: ReactNode;
     name?: string;

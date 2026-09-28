@@ -14,4 +14,12 @@ class OrderPolicy
     {
         return $order->buyer_id === $user->id;
     }
+
+    /**
+     * Determine whether the user can request a download for the given order.
+     */
+    public function viewDownload(User $user, Order $order): bool
+    {
+        return $order->buyer_id === $user->id && $order->isPaid();
+    }
 }

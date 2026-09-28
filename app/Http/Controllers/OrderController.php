@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Download;
 use App\Models\Order;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -27,6 +28,15 @@ class OrderController extends Controller
                     ? route('projects.cover', $order->project)
                     : null,
             ],
+            'downloads' => $order->downloads()
+                ->latest('id')
+                ->limit(10)
+                ->get()
+                ->map(fn (Download $download) => [
+                    'id' => $download->id,
+                    'downloaded_at' => $download->downloaded_at?->toIso8601String(),
+                    'created_at' => $download->created_at?->toIso8601String(),
+                ]),
         ]);
     }
 
@@ -45,6 +55,7 @@ class OrderController extends Controller
             'payout_cents' => $order->payout_cents ?? 0,
             'currency' => $order->currency,
             'provider' => $order->provider,
+            'can_download' => request()->user()?->can('viewDownload', $order) ?? false,
             'paid_at' => $order->updated_at?->toIso8601String(),
             'created_at' => $order->created_at?->toIso8601String(),
         ];
