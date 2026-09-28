@@ -8,6 +8,8 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class DatabaseSeeder extends Seeder
 {
@@ -39,16 +41,20 @@ class DatabaseSeeder extends Seeder
 
         $sellers = User::factory(4)->seller()->create();
 
-        $published = $sellers->map(
-            fn (User $seller) => Project::factory()->approved()->create([
+        $published = $sellers->map(function (User $seller): Project {
+            $project = Project::factory()->approved()->create([
                 'seller_id' => $seller->id,
                 'price_cents' => fake()->randomElement([0, 1999, 2999, 4900]),
-            ]),
-        );
+            ]);
+            $this->createArchiveFor($project);
 
-        Project::factory()->pendingReview()->create([
+            return $project;
+        });
+
+        $pendingProject = Project::factory()->pendingReview()->create([
             'seller_id' => $sellers->first()->id,
         ]);
+        $this->createArchiveFor($pendingProject);
 
         $buyer = User::factory()->create();
 
@@ -88,5 +94,24 @@ class DatabaseSeeder extends Seeder
         Order::factory()->create($abandoned);
         Order::factory()->expired()->create($abandoned);
         Order::factory()->failed()->create($abandoned);
+    }
+
+    private function createArchiveFor(Project $project): void
+    {
+        $dir = 'projects/'.$project->id;
+        $path = $dir.'/archive-'.time().'.zip';
+
+        $zip = new ZipArchive;
+        $temp = tempnam(sys_get_temp_dir(), 'seeder_zip');
+        if ($temp && $zip->open($temp, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+            $zip->addFromString('README.md', "# {$project->title}\n\n{$project->tagline}\n\n{$project->description}\n\n---\nDelivered securely by Prodhunt.");
+            $zip->addFromString('index.html', "<!DOCTYPE html><html><head><title>{$project->title}</title></head><body><h1>{$project->title}</h1><p>{$project->tagline}</p></body></html>");
+            $zip->close();
+
+            Storage::disk('local')->put($path, (string) file_get_contents($temp));
+            @unlink($temp);
+
+            $project->update(['zip_path' => $path]);
+        }
     }
 }

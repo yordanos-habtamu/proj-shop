@@ -1,4 +1,6 @@
 import { Form, Head } from '@inertiajs/react';
+import { PackagePlus, ShoppingBag } from 'lucide-react';
+import { useState } from 'react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -14,6 +16,14 @@ type Props = {
 };
 
 export default function Register({ passwordRules }: Props) {
+    const initialRole =
+        typeof window !== 'undefined' &&
+        new URLSearchParams(window.location.search).get('role') === 'seller'
+            ? 'seller'
+            : 'buyer';
+
+    const [role, setRole] = useState<'buyer' | 'seller'>(initialRole);
+
     return (
         <>
             <Head title="Register" />
@@ -26,6 +36,39 @@ export default function Register({ passwordRules }: Props) {
                 {({ processing, errors }) => (
                     <>
                         <div className="grid gap-6">
+                            <div className="grid gap-2">
+                                <Label>Account type</Label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button
+                                        type="button"
+                                        id="role-buyer-btn"
+                                        onClick={() => setRole('buyer')}
+                                        className={`flex flex-col items-center justify-center gap-1.5 rounded-lg border p-3 text-center text-xs transition-colors ${
+                                            role === 'buyer'
+                                                ? 'border-primary bg-primary/10 text-primary font-semibold'
+                                                : 'border-border bg-card text-muted-foreground hover:bg-muted/50'
+                                        }`}
+                                    >
+                                        <ShoppingBag className="size-4" />
+                                        <span>Buy projects</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        id="role-seller-btn"
+                                        onClick={() => setRole('seller')}
+                                        className={`flex flex-col items-center justify-center gap-1.5 rounded-lg border p-3 text-center text-xs transition-colors ${
+                                            role === 'seller'
+                                                ? 'border-primary bg-primary/10 text-primary font-semibold'
+                                                : 'border-border bg-card text-muted-foreground hover:bg-muted/50'
+                                        }`}
+                                    >
+                                        <PackagePlus className="size-4" />
+                                        <span>Sell projects</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" name="role" value={role} />
+                            </div>
+
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
                                 <Input

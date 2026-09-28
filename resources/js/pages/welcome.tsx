@@ -68,7 +68,13 @@ export default function Welcome({ projects }: WelcomeProps) {
                             </Button>
                             <Button size="lg" variant="outline" asChild>
                                 <Link
-                                    href={auth.user ? dashboard() : register()}
+                                    href={
+                                        auth.user
+                                            ? dashboard()
+                                            : register({
+                                                  query: { role: 'seller' },
+                                              })
+                                    }
                                 >
                                     {auth.user
                                         ? 'Go to dashboard'
