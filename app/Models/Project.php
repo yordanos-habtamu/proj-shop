@@ -30,6 +30,10 @@ use Illuminate\Support\Carbon;
  * @property array<string, mixed>|null $scan_report
  * @property string|null $review_notes
  * @property Carbon|null $reviewed_at
+ * @property int|null $orders_count
+ * @property int|null $sales_count
+ * @property int|null $gross_volume_cents
+ * @property int|null $net_payout_cents
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */

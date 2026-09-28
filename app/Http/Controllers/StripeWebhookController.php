@@ -125,6 +125,6 @@ class StripeWebhookController extends Controller
             return;
         }
 
-        $order->markRefunded();
+        PaymentProcessor::markAsRefunded($order);
     }
 }

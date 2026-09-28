@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\FeeController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ConnectController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         Route::get('fees', [FeeController::class, 'index'])->name('fees.index');

@@ -151,7 +151,9 @@ export default function ProjectShow({
                                             size="sm"
                                             asChild
                                         >
-                                            <Link href={showOrder.url(order_id)}>
+                                            <Link
+                                                href={showOrder.url(order_id)}
+                                            >
                                                 Open receipt
                                             </Link>
                                         </Button>

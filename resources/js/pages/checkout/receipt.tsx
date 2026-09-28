@@ -151,8 +151,8 @@ export default function Receipt({
                 <Card>
                     <CardContent className="space-y-4 py-6">
                         <div className="flex items-center justify-between">
-                            <h2 className="font-medium flex items-center gap-2">
-                                <FileArchive className="size-4 text-primary" />
+                            <h2 className="flex items-center gap-2 font-medium">
+                                <FileArchive className="text-primary size-4" />
                                 Project Archive
                             </h2>
                             {order.can_download && (
@@ -165,13 +165,13 @@ export default function Receipt({
                         {order.status === 'paid' ? (
                             <div className="space-y-4">
                                 {activeDownload ? (
-                                    <div className="bg-primary/5 border-primary/20 rounded-lg border p-4 space-y-3">
+                                    <div className="bg-primary/5 border-primary/20 space-y-3 rounded-lg border p-4">
                                         <div className="flex items-start justify-between gap-3">
                                             <div>
                                                 <p className="text-sm font-medium">
                                                     Your download link is ready!
                                                 </p>
-                                                <p className="text-muted-foreground text-xs mt-0.5 flex items-center gap-1.5">
+                                                <p className="text-muted-foreground mt-0.5 flex items-center gap-1.5 text-xs">
                                                     <Clock className="size-3.5" />
                                                     Expires at{' '}
                                                     {new Date(
@@ -184,31 +184,41 @@ export default function Receipt({
                                                     href={activeDownload.url}
                                                     download
                                                 >
-                                                    <DownloadIcon className="size-4 mr-1.5" />
+                                                    <DownloadIcon className="mr-1.5 size-4" />
                                                     Download ZIP
                                                 </a>
                                             </Button>
                                         </div>
                                         <p className="text-muted-foreground text-xs">
-                                            This link is valid for a single download. If interrupted or expired, you can generate another link below.
+                                            This link is valid for a single
+                                            download. If interrupted or expired,
+                                            you can generate another link below.
                                         </p>
                                     </div>
                                 ) : (
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-muted/40 rounded-lg p-4">
+                                    <div className="bg-muted/40 flex flex-col justify-between gap-3 rounded-lg p-4 sm:flex-row sm:items-center">
                                         <div>
                                             <p className="text-sm font-medium">
-                                                Ready to download {project.title}
+                                                Ready to download{' '}
+                                                {project.title}
                                             </p>
-                                            <p className="text-muted-foreground text-xs mt-0.5">
-                                                Generate an expiring signed link to securely fetch your project archive.
+                                            <p className="text-muted-foreground mt-0.5 text-xs">
+                                                Generate an expiring signed link
+                                                to securely fetch your project
+                                                archive.
                                             </p>
                                         </div>
                                         <Button
                                             onClick={handleGenerateDownload}
-                                            disabled={isGenerating || !order.can_download}
+                                            disabled={
+                                                isGenerating ||
+                                                !order.can_download
+                                            }
                                         >
-                                            <DownloadIcon className="size-4 mr-1.5" />
-                                            {isGenerating ? 'Preparing link...' : 'Get download link'}
+                                            <DownloadIcon className="mr-1.5 size-4" />
+                                            {isGenerating
+                                                ? 'Preparing link...'
+                                                : 'Get download link'}
                                         </Button>
                                     </div>
                                 )}
@@ -218,26 +228,29 @@ export default function Receipt({
                                         variant="outline"
                                         size="sm"
                                         onClick={handleGenerateDownload}
-                                        disabled={isGenerating || !order.can_download}
+                                        disabled={
+                                            isGenerating || !order.can_download
+                                        }
                                     >
                                         Generate fresh link
                                     </Button>
                                 )}
 
                                 {downloads.length > 0 && (
-                                    <div className="space-y-2 pt-2 border-t">
-                                        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                                            Download History ({downloads.length})
+                                    <div className="space-y-2 border-t pt-2">
+                                        <h3 className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                                            Download History ({downloads.length}
+                                            )
                                         </h3>
                                         <div className="space-y-1.5">
                                             {downloads.map((d) => (
                                                 <div
                                                     key={d.id}
-                                                    className="flex items-center justify-between text-xs text-muted-foreground py-1 border-b border-dashed last:border-0"
+                                                    className="text-muted-foreground flex items-center justify-between border-b border-dashed py-1 text-xs last:border-0"
                                                 >
                                                     <span className="flex items-center gap-1.5">
                                                         {d.downloaded_at ? (
-                                                            <CheckCircle2 className="size-3.5 text-primary" />
+                                                            <CheckCircle2 className="text-primary size-3.5" />
                                                         ) : (
                                                             <Clock className="size-3.5" />
                                                         )}
@@ -255,9 +268,12 @@ export default function Receipt({
                                 )}
                             </div>
                         ) : (
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="text-muted-foreground flex items-center gap-2 text-sm">
                                 <AlertCircle className="size-4" />
-                                <span>Downloads are only available once payment is confirmed.</span>
+                                <span>
+                                    Downloads are only available once payment is
+                                    confirmed.
+                                </span>
                             </div>
                         )}
                     </CardContent>
